@@ -15,43 +15,60 @@ class GoogleSheets {
   }
   
   async read({ spreadsheetId, range }) {
-    const { auth, api } = await this.auth();
-    const { data: { values } } = await api.spreadsheets.values.get({
-      auth, spreadsheetId, range,
-    });
-    return values;
+    try {
+      const { auth, api } = await this.auth();
+      const { data: { values } } = await api.spreadsheets.values.get({
+        auth, spreadsheetId, range,
+      });
+      return values;
+    } catch (error) {
+      console.log({ success: false, error });
+    }
   }
   
-  // async update() {
-  //   await googleSheets.spreadsheets.values.update({
-  //     auth,
-  //     spreadsheetId: process.env.SPREADSHEET_ID,
-  //     range,
-  //     valueInputOption: 'USER_ENTERED',
-  //     resource: { values: dataToLoad },
-  //   });
-  // }
-  //
-  // async append() {
-  //   await googleSheets.spreadsheets.values.append({
-  //     auth,
-  //     spreadsheetId,
-  //     range: `${sheetName}!A:AR`,
-  //     insertDataOption: 'INSERT_ROWS',
-  //     valueInputOption: 'RAW',
-  //     resource: { values },
-  //   });
-  // }
-  //
-  // async write() {
-  //   const { auth, googleSheets } = await authGoogle();
-  //
-  //   await googleSheets.spreadsheets.values.clear({
-  //     auth,
-  //     spreadsheetId,
-  //     range: `${sheetName}!A1:O`,
-  //   });
-  // }
+  async append({ spreadsheetId, range, values }) {
+    try {
+      const { auth, api } = await this.auth();
+      await api.spreadsheets.values.append({
+        auth,
+        spreadsheetId,
+        range,
+        insertDataOption: 'INSERT_ROWS',
+        valueInputOption: 'USER_ENTERED',
+        resource: { values },
+      });
+    } catch (error) {
+      console.log({ success: false, error });
+    }
+  }
+  
+  async update({ spreadsheetId, range, values }) {
+    try {
+      const { auth, api } = await this.auth();
+      await api.spreadsheets.values.update({
+        auth,
+        spreadsheetId,
+        range,
+        valueInputOption: 'USER_ENTERED',
+        resource: { values },
+      });
+    } catch (error) {
+      console.log({ success: false, error });
+    }
+  }
+  
+  async clear({ spreadsheetId, range }) {
+    try {
+      const { auth, api } = await this.auth();
+      await api.spreadsheets.values.clear({
+        auth,
+        spreadsheetId,
+        range,
+      });
+    } catch (error) {
+      console.log({ success: false, error });
+    }
+  }
   
 }
 
